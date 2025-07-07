@@ -10,4 +10,6 @@ module br.com.ifce.so.projectdeadlockdetection {
 
     opens br.com.ifce.so.projectdeadlockdetection to javafx.fxml;
     exports br.com.ifce.so.projectdeadlockdetection;
+    exports br.com.ifce.so.projectdeadlockdetection.ui.controller;
+    opens br.com.ifce.so.projectdeadlockdetection.ui.controller to javafx.fxml;
 }
