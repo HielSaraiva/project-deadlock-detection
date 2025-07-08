@@ -7,6 +7,7 @@ module br.com.ifce.so.projectdeadlockdetection {
     requires com.dlsc.formsfx;
     requires org.kordamp.ikonli.javafx;
     requires eu.hansolo.tilesfx;
+    requires jdk.jdi;
 
     opens br.com.ifce.so.projectdeadlockdetection to javafx.fxml;
     exports br.com.ifce.so.projectdeadlockdetection;
