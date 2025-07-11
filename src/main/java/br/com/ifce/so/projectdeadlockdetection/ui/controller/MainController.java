@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class MainController {
 
     // Variáveis de Controle
-    private ArrayList<Recurso> recursos = new ArrayList<>();
+    private Recurso[] recursos = new Recurso[10];
     private SistemaOperacional so;
     private GerenciadorRecursos gerenciador;
 
@@ -43,17 +43,27 @@ public class MainController {
             String nomeRecurso = nomeRecursoField.getText();
             Integer quantidadeInstanciasRecurso = Integer.parseInt(quantidadeInstanciasRecursoField.getText());
 
-            boolean existe = recursos.stream().anyMatch(r ->
-                    r.getId().equals(idRecurso) || r.getNome().equalsIgnoreCase(nomeRecurso)
-            );
+            // Verificação de existência para array
+            boolean existe = false;
+            for (Recurso r : recursos) {
+                if (r != null && (r.getId().equals(idRecurso) || r.getNome().equalsIgnoreCase(nomeRecurso))) {
+                    existe = true;
+                    break;
+                }
+            }
 
             if (existe) {
                 System.out.println("Já existe um recurso com este id ou nome.");
                 return;
             }
 
+            if (idRecurso <= 0 || idRecurso > 10) {
+                System.out.println("O id deve estar contido no intervalor [1, 10]");
+                return;
+            }
+
             Recurso recurso = new Recurso(idRecurso, nomeRecurso, quantidadeInstanciasRecurso);
-            recursos.add(recurso);
+            recursos[recurso.getId()-1] = recurso;
 
             nomeRecursoField.clear();
             idRecursoField.clear();
@@ -62,7 +72,14 @@ public class MainController {
             tempoVerificacaoField.setDisable(false);
             System.out.println("Recurso Cadastrado: " + recurso.toString());
 
-            if (recursos.size() == 10) {
+            int quantRecursos = 0;
+            for (Recurso r : recursos) {
+                if (r != null) {
+                    quantRecursos++;
+                }
+            }
+
+            if (quantRecursos == 10) {
                 mensagemRecursoCheio.setVisible(true);
                 cadastrarRecursoBtn.setDisable(true);
                 idRecursoField.setDisable(true);

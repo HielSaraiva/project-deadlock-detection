@@ -3,7 +3,7 @@ package br.com.ifce.so.projectdeadlockdetection.models;
 import java.util.ArrayList;
 
 public class Processo extends Thread {
-    private final Integer id;
+    private final Integer id; // [1, 10]
     private final Long deltaTs;
     private final Long deltaTu;
     private final GerenciadorRecursos gerenciador;
@@ -39,14 +39,17 @@ public class Processo extends Thread {
 
                 if (paraLiberar != null && tempo != 0L) {
                     // Libera recurso
-                    gerenciador.liberarRecurso(paraLiberar);
+                    gerenciador.liberarRecurso(paraLiberar, id);
                     recursosAlocados.removeAll(paraLiberar);
                 }
 
                 if (tempo % deltaTs == 0 && tempo != 0L) {
                     // Solicita recurso
-                    Recurso recursoSolicitado = gerenciador.solicitarRecurso();
-                    recursosAlocados.add(new RecursoAlocado(recursoSolicitado, tempo));
+                    Recurso recursoSolicitado = gerenciador.solicitarRecurso(id);
+
+                    if (recursoSolicitado != null) {
+                        recursosAlocados.add(new RecursoAlocado(recursoSolicitado, tempo));
+                    }
                 }
 
                 // Simula o processamento do processo
