@@ -1,35 +1,43 @@
 package br.com.ifce.so.projectdeadlockdetection.so;
 
 import br.com.ifce.so.projectdeadlockdetection.models.GerenciadorRecursos;
+import br.com.ifce.so.projectdeadlockdetection.ui.controller.MainController;
+import javafx.application.Platform;
 
 public class SistemaOperacional extends Thread {
     private final Long deltaT;
     private final GerenciadorRecursos gerenciador;
+    private MainController controller;
 
-    public SistemaOperacional(Long deltaT, GerenciadorRecursos gerenciador) {
+    public SistemaOperacional(Long deltaT, GerenciadorRecursos gerenciador, MainController controller) {
         this.deltaT = deltaT;
         this.gerenciador = gerenciador;
+        this.controller = controller;
         setDaemon(true);
     }
 
     @Override
     public void run() {
-        Long tempo = 0L;
+        Long contador = deltaT;
         try {
             while (true) {
+                contador--; // Decrementa antes de mostrar
+                final Long contadorFinal = contador;
+                Platform.runLater(() -> controller.atualizarContador(contadorFinal));
 
-                if (tempo % deltaT == 0 && tempo != 0L) {
-                    gerenciador.verificarDeadlock();
+                if (contador == 0) {
+                    var processosEmDeadlock = gerenciador.verificarDeadlock();
+                    Platform.runLater(() -> controller.atualizarDeadlock(processosEmDeadlock));
+                    contador = deltaT;
                 }
 
-                // Simula o processamento do Sistema Operacional
                 sleep(1000);
-                tempo++;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public String toString() {

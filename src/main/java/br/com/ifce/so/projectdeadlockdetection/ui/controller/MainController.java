@@ -39,6 +39,12 @@ public class MainController {
     @FXML
     private Button configurarSOBtn;
 
+    // Componentes FXML - SO DeadLock e Contador
+    @FXML
+    private Label labelDeadlock;
+    @FXML
+    private Label labelContador;
+
     // Componentes FXML - Criar Processo
     @FXML
     private TextField idProcessoCriarField;
@@ -121,7 +127,7 @@ public class MainController {
             Long tempoVerificacao = Long.parseLong(tempoVerificacaoField.getText());
 
             gerenciador = new GerenciadorRecursos(recursos);
-            so = new SistemaOperacional(tempoVerificacao, gerenciador);
+            so = new SistemaOperacional(tempoVerificacao, gerenciador, this);
             so.start();
 
             tempoVerificacaoField.clear();
@@ -211,5 +217,17 @@ public class MainController {
         } catch (Exception e) {
             System.out.println("Erro ao eliminar processo: " + e.getMessage());
         }
+    }
+
+    public void atualizarDeadlock(ArrayList<Integer> processosEmDeadlock) {
+        if (processosEmDeadlock == null || processosEmDeadlock.isEmpty()) {
+            labelDeadlock.setText("Processos em deadlock: Nenhum");
+        } else {
+            labelDeadlock.setText("Processos em deadlock: " + processosEmDeadlock);
+        }
+    }
+
+    public void atualizarContador(long segundosRestantes) {
+        labelContador.setText("Tempo para verificação: " + segundosRestantes + "s");
     }
 }
