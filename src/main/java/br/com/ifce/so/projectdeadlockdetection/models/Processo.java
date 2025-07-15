@@ -19,6 +19,10 @@ public class Processo extends Thread {
         setDaemon(true);
     }
 
+    public ArrayList<RecursoAlocado> getRecursosAlocados() {
+        return recursosAlocados;
+    }
+
     private ArrayList<RecursoAlocado> recursosParaLiberar(Long tempoAtual) {
         ArrayList<RecursoAlocado> paraLiberar = new ArrayList<>();
         for (RecursoAlocado r : recursosAlocados) {
@@ -33,7 +37,7 @@ public class Processo extends Thread {
     public void run() {
         Long tempo = 0L;
         try {
-            while (true) {
+            while (!Thread.interrupted()) {
 
                 ArrayList<RecursoAlocado> paraLiberar = recursosParaLiberar(tempo);
 
@@ -56,8 +60,28 @@ public class Processo extends Thread {
                 sleep(1000);
                 tempo++;
             }
+        } catch (InterruptedException e) {
+            // Thread foi interrompida durante o sleep
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            // Libera recursos restantes ao encerrar
+            if (!recursosAlocados.isEmpty()) {
+                gerenciador.liberarRecurso(new ArrayList<>(recursosAlocados), id);
+                recursosAlocados.clear();
+            }
+            // Zera as matrizes do processo
+            gerenciador.zerarRequisicoes(id);
+            gerenciador.zerarAlocacoes(id);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Processo{" +
+                "id=" + id +
+                ", deltaTs=" + deltaTs +
+                ", deltaTu=" + deltaTu +
+                '}';
     }
 }

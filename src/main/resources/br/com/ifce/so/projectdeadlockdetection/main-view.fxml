@@ -50,6 +50,34 @@
     </children>
     <Separator prefWidth="200.0"/>
     <children>
+        <Label fx:id="mensagemCriarEliminarProcesso" text="Criar/Eliminar Processo:" style="-fx-font-weight: bold; -fx-font-size: 18px;"/>
+        <HBox alignment="CENTER" spacing="20.0">
+            <HBox alignment="CENTER" spacing="10.0">
+                <HBox alignment="CENTER" spacing="5.0">
+                    <Label text="ID:"/>
+                    <TextField fx:id="idProcessoCriarField" prefWidth="40.0" disable="true"/>
+                </HBox>
+                <HBox alignment="CENTER" spacing="5.0">
+                    <Label text="DeltaTs:"/>
+                    <TextField fx:id="tempoSolicitacaoField" prefWidth="40.0" disable="true"/>
+                </HBox>
+                <HBox alignment="CENTER" spacing="5.0">
+                    <Label text="DeltaTu:"/>
+                    <TextField fx:id="tempoUsoField" prefWidth="40.0" disable="true"/>
+                </HBox>
+                <Button fx:id="criarProcessoBtn" onAction="#aoCriarProcesso" text="Criar Processo" disable="true"/>
+            </HBox>
 
+            <Separator orientation="VERTICAL" />
+
+            <HBox alignment="CENTER" spacing="10.0">
+                <HBox alignment="CENTER" spacing="5.0">
+                    <Label text="ID:"/>
+                    <TextField fx:id="idProcessoEliminarField" prefWidth="40.0" disable="true"/>
+                </HBox>
+                <Button fx:id="eliminarProcessoBtn" onAction="#aoEliminarProcesso" text="Eliminar Processo" disable="true"/>
+            </HBox>
+        </HBox>
     </children>
+    <Separator prefWidth="200.0"/>
 </VBox>

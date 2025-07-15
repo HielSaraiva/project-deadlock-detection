@@ -30,4 +30,11 @@ public class SistemaOperacional extends Thread {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public String toString() {
+        return "SistemaOperacional{" +
+                "deltaT=" + deltaT +
+                '}';
+    }
 }
