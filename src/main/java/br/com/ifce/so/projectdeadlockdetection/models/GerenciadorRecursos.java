@@ -1,5 +1,8 @@
 package br.com.ifce.so.projectdeadlockdetection.models;
 
+import br.com.ifce.so.projectdeadlockdetection.ui.controller.MainController;
+import javafx.application.Platform;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,14 +10,17 @@ import java.util.concurrent.Semaphore;
 
 public class GerenciadorRecursos {
     private final Object mutex;
-    private int[] E; // Recursos existentes
-    private Semaphore[] A; // Recursos disponíveis
-    private int[][] C; // Matriz de alocação
-    private int[][] R; // Matriz de requisição
+    public int[] E; // Recursos existentes
+    public Semaphore[] A; // Recursos disponíveis
+    public int[][] C; // Matriz de alocação
+    public int[][] R; // Matriz de requisição
     private Recurso[] recursos;
 
-    public GerenciadorRecursos(Recurso[] recursos) {
+    private MainController controller;
+
+    public GerenciadorRecursos(Recurso[] recursos, MainController controller) {
         this.recursos = recursos;
+        this.controller = controller;
         mutex = new Object();
 
         E = new int[10];
@@ -115,71 +121,78 @@ public class GerenciadorRecursos {
         Recurso recursoSolicitado = null;
 
         synchronized (mutex) {
-            int recursosValidos = 0;
+            ArrayList<Integer> indicesValidos = new ArrayList<>();
             for (int i = 0; i < recursos.length; i++) {
                 if (recursos[i] != null) {
-                    recursosValidos++;
+                    indicesValidos.add(i);
+                }
+            }
+            Collections.shuffle(indicesValidos);
+
+            for (int idx : indicesValidos) {
+                int totalSolicitado = R[processoId - 1][idx] + C[processoId - 1][idx];
+                if (totalSolicitado < E[idx]) {
+                    indiceRecurso = idx;
+                    recursoSolicitado = recursos[idx];
+                    break;
                 }
             }
 
-            int numeroAleatorio = (int) (Math.random() * recursosValidos);
-
-            int contador = 0;
-            for (int i = 0; i < recursos.length; i++) {
-                if (recursos[i] != null) {
-                    if (contador == numeroAleatorio) {
-                        indiceRecurso = i;
-                        recursoSolicitado = recursos[i];
-                        break;
-                    }
-                    contador++;
-                }
+            if (recursoSolicitado == null) {
+                System.out.println("Processo " + processoId + " já solicitou o máximo de instâncias de todos os recursos.");
+                return null;
             }
 
+            Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
             R[processoId - 1][indiceRecurso]++;
+            Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
             System.out.println("Processo " + processoId + " solicitou recurso " + recursoSolicitado.getNome());
         }
 
         try {
-            // Verifica se a thread foi interrompida antes de bloquear
             if (Thread.currentThread().isInterrupted()) {
                 synchronized (mutex) {
                     R[processoId - 1][indiceRecurso]--;
                 }
+                Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
                 return null;
             }
 
+            Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
             A[indiceRecurso].acquire();
+            Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
 
-            // Verifica se a thread foi interrompida após adquirir o recurso
             if (Thread.currentThread().isInterrupted()) {
                 synchronized (mutex) {
                     R[processoId - 1][indiceRecurso]--;
                     C[processoId - 1][indiceRecurso]++;
                 }
-                // Libera imediatamente o recurso
+                Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
                 A[indiceRecurso].release();
                 return null;
             }
 
+            Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
             synchronized (mutex) {
                 R[processoId - 1][indiceRecurso]--;
                 C[processoId - 1][indiceRecurso]++;
                 System.out.println("Processo " + processoId + " alocou recurso " + recursoSolicitado.getNome());
             }
 
+            Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
             return recursoSolicitado;
 
         } catch (InterruptedException e) {
-            // Se for interrompido durante o acquire, desfaz a requisição
             synchronized (mutex) {
                 R[processoId - 1][indiceRecurso]--;
+                Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
             }
-            Thread.currentThread().interrupt(); // Mantém o status de interrupção
+            Thread.currentThread().interrupt();
             return null;
         } catch (Exception e) {
             synchronized (mutex) {
                 R[processoId - 1][indiceRecurso]--;
+                Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
             }
             return null;
         }
@@ -202,6 +215,7 @@ public class GerenciadorRecursos {
                 System.out.println("Processo " + processoId + " liberou recurso " + recurso.getNome());
                 A[indiceRecurso].release();
             }
+            Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
         }
     }
 
@@ -210,6 +224,7 @@ public class GerenciadorRecursos {
             for (int j = 0; j < 10; j++) {
                 R[idProcesso - 1][j] = 0;
             }
+            Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
         }
     }
 
@@ -218,6 +233,15 @@ public class GerenciadorRecursos {
             for (int j = 0; j < 10; j++) {
                 C[idProcesso - 1][j] = 0;
             }
+            Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
         }
+    }
+
+    public int[] getAArray() {
+        int[] arr = new int[10];
+        for (int i = 0; i < 10; i++) {
+            arr[i] = (A[i] != null) ? A[i].availablePermits() : 0;
+        }
+        return arr;
     }
 }

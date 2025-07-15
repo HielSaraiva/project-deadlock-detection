@@ -5,6 +5,7 @@ import br.com.ifce.so.projectdeadlockdetection.models.Processo;
 import br.com.ifce.so.projectdeadlockdetection.models.Recurso;
 import br.com.ifce.so.projectdeadlockdetection.models.RecursoAlocado;
 import br.com.ifce.so.projectdeadlockdetection.so.SistemaOperacional;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -61,6 +62,17 @@ public class MainController {
     @FXML
     private Button eliminarProcessoBtn;
 
+    // Componentes FXML - Recursos
+    @FXML
+    private Label labelE;
+    @FXML
+    private Label labelA;
+    @FXML
+    private Label labelC;
+    @FXML
+    private Label labelR;
+
+
 
     // Controladores
     @FXML
@@ -93,6 +105,8 @@ public class MainController {
             Recurso recurso = new Recurso(idRecurso, nomeRecurso, quantidadeInstanciasRecurso);
             recursos[recurso.getId() - 1] = recurso;
 
+            labelE.setText("Recursos Existentes:\n " + recursosToString(recursos));
+
             nomeRecursoField.clear();
             idRecursoField.clear();
             quantidadeInstanciasRecursoField.clear();
@@ -120,15 +134,27 @@ public class MainController {
         }
     }
 
+    private String recursosToString(Recurso[] recursos) {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < recursos.length; i++) {
+            if (i > 0) sb.append(", ");
+            sb.append(recursos[i] != null ? recursos[i].getQuantidadeInstancias() : 0);
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
     @FXML
     private void aoConfigurarSO() {
 
         try {
             Long tempoVerificacao = Long.parseLong(tempoVerificacaoField.getText());
 
-            gerenciador = new GerenciadorRecursos(recursos);
+            gerenciador = new GerenciadorRecursos(recursos, this);
             so = new SistemaOperacional(tempoVerificacao, gerenciador, this);
             so.start();
+
+            Platform.runLater(() -> this.atualizarEstadoRecursos(gerenciador.E, gerenciador.getAArray(), gerenciador.C, gerenciador.R));
 
             tempoVerificacaoField.clear();
             configurarSOBtn.setDisable(true);
@@ -227,7 +253,22 @@ public class MainController {
         }
     }
 
-    public void atualizarContador(long segundosRestantes) {
-        labelContador.setText("Tempo para verificação: " + segundosRestantes + "s");
+    public void atualizarContador(double segundosRestantes) {
+        labelContador.setText(String.format("Tempo para verificação: %.2fs", segundosRestantes));
+    }
+
+    public void atualizarEstadoRecursos(int[] E, int[] A, int[][] C, int[][] R) {
+        labelE.setText("Recursos Existentes:\n " + java.util.Arrays.toString(E));
+        labelA.setText("Recursos Disponíveis:\n " + java.util.Arrays.toString(A));
+        labelC.setText("Matriz de Alocação:\n" + matrizParaString(C));
+        labelR.setText("Matriz de Requisição:\n" + matrizParaString(R));
+    }
+
+    private String matrizParaString(int[][] matriz) {
+        StringBuilder sb = new StringBuilder();
+        for (int[] linha : matriz) {
+            sb.append(java.util.Arrays.toString(linha)).append("\n");
+        }
+        return sb.toString();
     }
 }

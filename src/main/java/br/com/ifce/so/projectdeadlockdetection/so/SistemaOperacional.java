@@ -18,20 +18,18 @@ public class SistemaOperacional extends Thread {
 
     @Override
     public void run() {
-        Long contador = deltaT;
+        long tempoRestanteMs = deltaT * 1000;
         try {
             while (true) {
-                contador--; // Decrementa antes de mostrar
-                final Long contadorFinal = contador;
-                Platform.runLater(() -> controller.atualizarContador(contadorFinal));
-
-                if (contador == 0) {
-                    var processosEmDeadlock = gerenciador.verificarDeadlock();
-                    Platform.runLater(() -> controller.atualizarDeadlock(processosEmDeadlock));
-                    contador = deltaT;
+                long inicio = System.currentTimeMillis();
+                for (long ms = tempoRestanteMs; ms >= 0; ms -= 10) {
+                    double segundos = ms / 1000.0;
+                    Platform.runLater(() -> controller.atualizarContador(segundos));
+                    Thread.sleep(10);
                 }
-
-                sleep(1000);
+                var processosEmDeadlock = gerenciador.verificarDeadlock();
+                Platform.runLater(() -> controller.atualizarDeadlock(processosEmDeadlock));
+                tempoRestanteMs = deltaT * 1000;
             }
         } catch (Exception e) {
             e.printStackTrace();
