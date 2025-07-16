@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 
@@ -72,7 +73,11 @@ public class MainController {
     @FXML
     private Label labelR;
 
-
+    // Componentes FXML - Processos BLOQUEADO/RODANDO
+    @FXML
+    private VBox listaBloqueados;
+    @FXML
+    private VBox listaRodando;
 
     // Controladores
     @FXML
@@ -256,6 +261,7 @@ public class MainController {
         } else {
             labelDeadlock.setText("Processos em deadlock: " + processosEmDeadlock);
         }
+        atualizarListasProcessos(processosEmDeadlock);
     }
 
     public void atualizarContador(double segundosRestantes) {
@@ -310,6 +316,52 @@ public class MainController {
             }
             sb.append("]\n");
         }
+        return sb.toString();
+    }
+
+    // src/main/java/br/com/ifce/so/projectdeadlockdetection/ui/controller/MainController.java
+
+    public void atualizarListasProcessos(ArrayList<Integer> processosEmDeadlock) {
+        listaBloqueados.getChildren().clear();
+        listaRodando.getChildren().clear();
+
+        for (Processo p : processos) {
+            if (p != null) {
+                String recursosStr = getRecursosAlocadosString(p);
+
+                String info = String.format("id: %d | deltaTs: %d | deltaTu: %d%s",
+                        p.getIdP(), p.getDeltaTs(), p.getDeltaTu(),
+                        recursosStr.isEmpty() ? "" : " | " + recursosStr);
+
+                Label l = new Label(info);
+
+                if (processosEmDeadlock != null && processosEmDeadlock.contains(p.getIdP())) {
+                    listaBloqueados.getChildren().add(l);
+                } else {
+                    listaRodando.getChildren().add(l);
+                }
+            }
+        }
+    }
+
+    // Monta a string dos recursos alocados, agrupando por nome e contando instâncias
+    private String getRecursosAlocadosString(Processo p) {
+        var recursosAlocados = p.getRecursosAlocados();
+        if (recursosAlocados == null || recursosAlocados.isEmpty()) return "";
+
+        // Agrupa por nome e conta instâncias
+        java.util.Map<String, Integer> recursoCount = new java.util.HashMap<>();
+        for (RecursoAlocado ra : recursosAlocados) {
+            String nome = ra.recurso().getNome();
+            recursoCount.put(nome, recursoCount.getOrDefault(nome, 0) + 1);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        recursoCount.forEach((nome, qtd) -> {
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(nome).append("[").append(qtd).append("]");
+        });
+
         return sb.toString();
     }
 }

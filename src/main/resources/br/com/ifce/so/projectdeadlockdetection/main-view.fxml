@@ -94,4 +94,19 @@
         </HBox>
     </children>
     <Separator prefWidth="200.0"/>
+    <children>
+        <HBox alignment="CENTER" spacing="70.0">
+            <VBox>
+                <Label fx:id="mensagemProcessoBloqueado" text="BLOQUEADO:" style="-fx-font-weight: bold; -fx-font-size: 18px;"/>
+                <VBox fx:id="listaBloqueados" spacing="5"/>
+
+            </VBox>
+            <Separator orientation="VERTICAL" />
+            <VBox>
+                <Label fx:id="mensagemProcessoRodando" text="RODANDO:" style="-fx-font-weight: bold; -fx-font-size: 18px;"/>
+                <VBox fx:id="listaRodando" spacing="5"/>
+
+            </VBox>
+        </HBox>
+    </children>
 </VBox>

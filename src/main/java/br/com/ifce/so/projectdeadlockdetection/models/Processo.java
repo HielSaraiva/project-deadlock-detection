@@ -76,6 +76,18 @@ public class Processo extends Thread {
         }
     }
 
+    public Long getDeltaTs() {
+        return deltaTs;
+    }
+
+    public Long getDeltaTu() {
+        return deltaTu;
+    }
+
+    public Integer getIdP() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "Processo{" +
