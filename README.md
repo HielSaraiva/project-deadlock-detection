@@ -1,57 +1,57 @@
-# Projeto Deadlock Detection
+# Deadlock Detection Project
 
-Sistema para simulação e detecção de deadlocks em ambientes de Sistemas Operacionais, desenvolvido como parte de disciplina de Sistemas Operacionais.
+System for simulation and detection of deadlocks in Operating Systems environments, developed as part of an undergraduate university course (Sistemas Operacionais discipline).
 
-## Índice
-- [Descrição](#descrição)
-- [Funcionalidades](#funcionalidades)
-- [Instalação](#instalação)
-- [Como Usar](#como-usar)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Equipe](#equipe)
-- [Licença](#licença)
+## Table of Contents
+- [Description](#description)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Technologies Used](#technologies-used)
+- [Team](#team)
+- [License](#license)
 
-## Descrição
-Este projeto tem como objetivo simular o gerenciamento de recursos e processos em um sistema operacional, permitindo a análise e detecção de situações de deadlock. A interface gráfica facilita a configuração dos recursos, processos e a visualização do estado do sistema.
+## Description
+This project aims to simulate resource and process management in an operating system, allowing the analysis and detection of deadlock situations. The graphical interface makes it easy to configure resources, processes, and visualize the system state.
 
-## Funcionalidades
-- Cadastro de recursos e processos
-- Alocação e liberação de recursos
-- Eliminação de processos
-- Detecção automática de deadlocks
-- Visualização do estado dos recursos e processos
-- Interface gráfica intuitiva
+## Features
+- Resource and process registration
+- Resource allocation and release
+- Process elimination
+- Automatic deadlock detection
+- Visualization of resource and process states
+- Intuitive graphical interface
 
-## Instalação
-1. Clone o repositório:
+## Installation
+1. Clone the repository:
    ```bash
    git clone https://github.com/HielSaraiva/project-deadlock-detection.git
    ```
-2. Acesse a pasta do projeto:
+2. Access the project folder:
    ```bash
    cd project-deadlock-detection
    ```
-3. Compile o projeto usando Maven:
+3. Compile the project using Maven:
    ```bash
    ./mvnw clean install
    ```
 
-## Como Usar
-1. Execute a aplicação:
+## Usage
+1. Run the application:
    ```bash
    ./mvnw javafx:run
    ```
-2. Utilize a interface gráfica para cadastrar recursos, processos e simular o funcionamento do sistema operacional.
+2. Use the graphical interface to register resources, processes, and simulate the operation of the operating system.
 
-## Tecnologias Utilizadas
+## Technologies Used
 - Java 17
 - JavaFX 20
 - Maven 3.9+
 
-## Equipe
+## Team
 - Hiel Saraiva
 - Roberta Alanis
 - Charles Lima
 
-## Licença
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
+## License
+This project is licensed under the MIT License. See the LICENSE file for more details.
