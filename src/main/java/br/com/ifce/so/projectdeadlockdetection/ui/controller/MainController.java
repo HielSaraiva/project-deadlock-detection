@@ -135,8 +135,12 @@ public class MainController {
     }
 
     private String recursosToString(Recurso[] recursos) {
-        StringBuilder sb = new StringBuilder("[");
+        int max = -1;
         for (int i = 0; i < recursos.length; i++) {
+            if (recursos[i] != null) max = i;
+        }
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i <= max; i++) {
             if (i > 0) sb.append(", ");
             sb.append(recursos[i] != null ? recursos[i].getQuantidadeInstancias() : 0);
         }
@@ -206,6 +210,7 @@ public class MainController {
             tempoUsoField.clear();
 
             System.out.println("Processo criado com sucesso: " + novoProcesso);
+            Platform.runLater(() -> atualizarEstadoRecursos(gerenciador.E, gerenciador.getAArray(), gerenciador.C, gerenciador.R));
 
         } catch (Exception e) {
             System.out.println("Erro ao criar Processo: " + e.getMessage());
@@ -257,17 +262,53 @@ public class MainController {
         labelContador.setText(String.format("Tempo para verificação: %.2fs", segundosRestantes));
     }
 
+    // No MainController.java
+
     public void atualizarEstadoRecursos(int[] E, int[] A, int[][] C, int[][] R) {
-        labelE.setText("Recursos Existentes:\n " + java.util.Arrays.toString(E));
-        labelA.setText("Recursos Disponíveis:\n " + java.util.Arrays.toString(A));
-        labelC.setText("Matriz de Alocação:\n" + matrizParaString(C));
-        labelR.setText("Matriz de Requisição:\n" + matrizParaString(R));
+        int maxRecurso = getMaxIndiceRecurso();
+        int maxProcesso = getMaxIndiceProcesso();
+
+        labelE.setText("Recursos Existentes:\n " + vetorParaString(E, maxRecurso));
+        labelA.setText("Recursos Disponíveis:\n " + vetorParaString(A, maxRecurso));
+        labelC.setText("Matriz de Alocação:\n" + matrizParaString(C, maxProcesso, maxRecurso));
+        labelR.setText("Matriz de Requisição:\n" + matrizParaString(R, maxProcesso, maxRecurso));
     }
 
-    private String matrizParaString(int[][] matriz) {
+    private int getMaxIndiceRecurso() {
+        int max = -1;
+        for (int i = 0; i < recursos.length; i++) {
+            if (recursos[i] != null) max = i;
+        }
+        return max + 1; // +1 para incluir o último recurso
+    }
+
+    private int getMaxIndiceProcesso() {
+        int max = -1;
+        for (int i = 0; i < processos.length; i++) {
+            if (processos[i] != null) max = i;
+        }
+        return max + 1;
+    }
+
+    private String vetorParaString(int[] vetor, int tamanho) {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < tamanho; i++) {
+            if (i > 0) sb.append(", ");
+            sb.append(vetor[i]);
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    private String matrizParaString(int[][] matriz, int linhas, int colunas) {
         StringBuilder sb = new StringBuilder();
-        for (int[] linha : matriz) {
-            sb.append(java.util.Arrays.toString(linha)).append("\n");
+        for (int i = 0; i < linhas; i++) {
+            sb.append("[");
+            for (int j = 0; j < colunas; j++) {
+                if (j > 0) sb.append(", ");
+                sb.append(matriz[i][j]);
+            }
+            sb.append("]\n");
         }
         return sb.toString();
     }
