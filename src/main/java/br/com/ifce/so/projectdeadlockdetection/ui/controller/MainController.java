@@ -10,9 +10,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 public class MainController {
@@ -78,6 +81,16 @@ public class MainController {
     private VBox listaBloqueados;
     @FXML
     private VBox listaRodando;
+
+    // Componentes FXML - Log do Sistema
+    @FXML
+    private TextArea logArea;
+
+
+    @FXML
+    public void initialize() {
+        inicializarLogRedirect();
+    }
 
     // Controladores
     @FXML
@@ -363,5 +376,21 @@ public class MainController {
         });
 
         return sb.toString();
+    }
+
+    public void inicializarLogRedirect() {
+        PrintStream printStream = new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b) {
+                Platform.runLater(() -> logArea.appendText(String.valueOf((char) b)));
+            }
+            @Override
+            public void write(byte[] b, int off, int len) {
+                String texto = new String(b, off, len);
+                Platform.runLater(() -> logArea.appendText(texto));
+            }
+        }, true, java.nio.charset.StandardCharsets.UTF_8);
+        System.setOut(printStream);
+        System.setErr(printStream); // Opcional: também redireciona erros
     }
 }

@@ -8,6 +8,7 @@
 
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
 <VBox alignment="TOP_CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="br.com.ifce.so.projectdeadlockdetection.ui.controller.MainController">
     <padding>
@@ -99,14 +100,15 @@
             <VBox>
                 <Label fx:id="mensagemProcessoBloqueado" text="BLOQUEADO:" style="-fx-font-weight: bold; -fx-font-size: 18px;"/>
                 <VBox fx:id="listaBloqueados" spacing="5"/>
-
             </VBox>
             <Separator orientation="VERTICAL" />
             <VBox>
                 <Label fx:id="mensagemProcessoRodando" text="RODANDO:" style="-fx-font-weight: bold; -fx-font-size: 18px;"/>
                 <VBox fx:id="listaRodando" spacing="5"/>
-
             </VBox>
         </HBox>
     </children>
+    <Separator prefWidth="200.0"/>
+    <Label fx:id="mensagemLog" text="Log:" style="-fx-font-weight: bold; -fx-font-size: 18px;"/>
+    <TextArea fx:id="logArea" editable="false" prefRowCount="8" wrapText="true"/>
 </VBox>
