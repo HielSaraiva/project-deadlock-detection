@@ -110,5 +110,5 @@
     </children>
     <Separator prefWidth="200.0"/>
     <Label fx:id="mensagemLog" text="Log:" style="-fx-font-weight: bold; -fx-font-size: 18px;"/>
-    <TextArea fx:id="logArea" editable="false" prefRowCount="8" wrapText="true"/>
+    <TextArea fx:id="logArea" editable="false" prefRowCount="8" wrapText="true" VBox.vgrow="ALWAYS"/>
 </VBox>

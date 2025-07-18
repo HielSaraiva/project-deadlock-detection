@@ -41,7 +41,7 @@ public class Processo extends Thread {
 
                 ArrayList<RecursoAlocado> paraLiberar = recursosParaLiberar(tempo);
 
-                if (paraLiberar != null && tempo != 0L) {
+                if (paraLiberar != null) {
                     // Libera recurso
                     gerenciador.liberarRecurso(paraLiberar, id);
                     recursosAlocados.removeAll(paraLiberar);

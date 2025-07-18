@@ -382,15 +382,22 @@ public class MainController {
         PrintStream printStream = new PrintStream(new OutputStream() {
             @Override
             public void write(int b) {
-                Platform.runLater(() -> logArea.appendText(String.valueOf((char) b)));
+                Platform.runLater(() -> appendLogText(String.valueOf((char) b)));
             }
             @Override
             public void write(byte[] b, int off, int len) {
                 String texto = new String(b, off, len);
-                Platform.runLater(() -> logArea.appendText(texto));
+                Platform.runLater(() -> appendLogText(texto));
+            }
+            private void appendLogText(String texto) {
+                double scrollTop = logArea.getScrollTop();
+                int caretPosition = logArea.getCaretPosition();
+                logArea.appendText(texto);
+                logArea.positionCaret(caretPosition);
+                logArea.setScrollTop(scrollTop);
             }
         }, true, java.nio.charset.StandardCharsets.UTF_8);
         System.setOut(printStream);
-        System.setErr(printStream); // Opcional: também redireciona erros
+        System.setErr(printStream);
     }
 }

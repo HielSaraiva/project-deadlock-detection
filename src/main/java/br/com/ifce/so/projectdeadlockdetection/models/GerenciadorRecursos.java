@@ -165,7 +165,7 @@ public class GerenciadorRecursos {
             if (Thread.currentThread().isInterrupted()) {
                 synchronized (mutex) {
                     R[processoId - 1][indiceRecurso]--;
-                    C[processoId - 1][indiceRecurso]++;
+//                    C[processoId - 1][indiceRecurso]++;
                 }
                 Platform.runLater(() -> controller.atualizarEstadoRecursos(E, getAArray(), C, R));
                 A[indiceRecurso].release();
