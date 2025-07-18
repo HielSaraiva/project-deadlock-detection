@@ -43,6 +43,26 @@ This project aims to simulate resource and process management in an operating sy
    ```
 2. Use the graphical interface to register resources, processes, and simulate the operation of the operating system.
 
+## Running the App from the Distribution Zip
+
+After building the project, a distribution zip file is generated using the following command:
+```bash
+./mvnw javafx:jlink
+```
+This will create a zip file at `target/app.zip`.
+
+To run the application from this distribution in 'dist/app.zip', follow these steps:
+
+1. Unzip the file:
+   ```bash
+   unzip dist/app.zip -d dist/
+   ```
+2. The executable file will be located at `dist/app/bin/app`.
+3. Run the application:
+   ```bash
+   dist/app/bin/app
+   ```
+
 ## Technologies Used
 - Java 17
 - JavaFX 20

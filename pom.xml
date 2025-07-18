@@ -102,7 +102,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                br.com.ifce.so.projectdeadlockdetection/br.com.ifce.so.projectdeadlockdetection.HelloApplication
+                                br.com.ifce.so.projectdeadlockdetection/br.com.ifce.so.projectdeadlockdetection.MainApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
