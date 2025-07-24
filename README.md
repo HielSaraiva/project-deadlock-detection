@@ -73,5 +73,14 @@ To run the application from this distribution in 'dist/app.zip', follow these st
 - Roberta Alanis
 - Charles Lima
 
+## Screens
+
+### Initial screen
+
+<img src="/assets/img/Inicial screen.png" alt="Initial screen" style="width: 600px">
+
+### Running
+
+
 ## License
 This project is licensed under the MIT License. See the LICENSE file for more details.
