@@ -81,6 +81,7 @@ To run the application from this distribution in 'dist/app.zip', follow these st
 
 ### Running
 
+<video src="https://github.com/user-attachments/assets/448cdd6b-3169-4677-bf75-181e6f465f8b"><\video>
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for more details.
