@@ -69,9 +69,9 @@ To run the application from this distribution in 'dist/app.zip', follow these st
 - Maven 3.9+
 
 ## Team
-- Hiel Saraiva
-- Roberta Alanis
-- Charles Lima
+- Hiel Saraiva Freitas de Queiroga
+- Roberta Alanis Andrade Nogueira
+- Charles Lima de Brito Filho
 
 ## Screens
 
